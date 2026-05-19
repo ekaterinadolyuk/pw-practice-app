@@ -35,3 +35,12 @@ test('parametrized method @smoke @regression', async ({page}) => {
     // await pm.getDatePickerPage().selectCommonDatepickerDateFromToday(5)
     // await pm.getDatePickerPage().selectDatePickerWithRangeFromToday(6, 15)
 })
+
+test.only('testing with argos ci', async ({page}) => {
+    //creating an instance of the class and passing page as parameter
+    const pm = new PageManager(page) 
+    
+    //calling the method from the class
+    await pm.navigateTo().formLayoutsPage()
+    await pm.navigateTo().smartTablePage()
+})
