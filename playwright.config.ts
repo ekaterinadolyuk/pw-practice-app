@@ -1,5 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 import type { TestOptions } from './test-options'
+import { createArgosReporterOptions } from "@argos-ci/playwright/reporter";
+
 
 /**
  * Read environment variables from file.
@@ -29,10 +31,10 @@ export default defineConfig<TestOptions>({
     // Add Argos reporter.
     [
       "@argos-ci/playwright/reporter",
-      {
+      createArgosReporterOptions({
         // Upload to Argos on CI only.
         uploadToArgos: !!process.env.CI
-      },
+      }),
     ],
     ['json', {outputFile: 'test-results/jsonReport.json'}],
     ['json', {outputFile: 'test-results/junitReport.xml'}],
