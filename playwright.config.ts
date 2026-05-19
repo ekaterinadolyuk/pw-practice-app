@@ -23,9 +23,20 @@ export default defineConfig<TestOptions>({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined, // if undefined change to 1, it will increase execution time, because pw will execute all spec files within 1 worker
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: [['json', {outputFile: 'test-results/jsonReport.json'}],
-            ['json', {outputFile: 'test-results/junitReport.xml'}],
-          ['html']],//to download json report into file
+  reporter: [
+    // Use "dot" reporter on CI, "list" otherwise (Playwright default).
+    process.env.CI ? ["dot"] : ["list"],
+    // Add Argos reporter.
+    [
+      "@argos-ci/playwright/reporter",
+      {
+        // Upload to Argos on CI only.
+        uploadToArgos: !!process.env.CI
+      },
+    ],
+    ['json', {outputFile: 'test-results/jsonReport.json'}],
+    ['json', {outputFile: 'test-results/junitReport.xml'}],
+    ['html']],//to download json report into file
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
@@ -36,6 +47,7 @@ export default defineConfig<TestOptions>({
       : 'http://localhost:4200',
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry', //series of snapshots of the testrun (logs, steps of executions)
+    screenshot: 'only-on-failure',
     video: {
       mode: 'off',
       size: { width: 1280, height: 720 } //record video for all tests, also for passed ones. 'on-first-retry' - only for failed tests

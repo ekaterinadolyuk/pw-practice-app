@@ -1,6 +1,7 @@
 import {test, expect} from '@playwright/test'
 import { PageManager } from '../page-objects/pageManager'
 import {faker} from '@faker-js/faker'
+import { argosScreenshot } from "@argos-ci/playwright";
 
 test.beforeEach(async ({page}) => {
     await page.goto('/') //navigate to the base url, which is set in the config file, and add '/' to navigate to the homepage
@@ -42,5 +43,7 @@ test.only('testing with argos ci', async ({page}) => {
     
     //calling the method from the class
     await pm.navigateTo().formLayoutsPage()
+    await argosScreenshot(page, "form layouts page")
     await pm.navigateTo().smartTablePage()
+    await argosScreenshot(page, "smart table page")
 })
